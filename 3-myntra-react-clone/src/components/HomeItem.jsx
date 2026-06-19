@@ -1,4 +1,22 @@
+import { useDispatch, useSelector } from "react-redux";
+import { bagActions } from "../store/bagSlice";
+import { IoBagAddOutline } from "react-icons/io5";
+import { IoBagRemoveOutline } from "react-icons/io5";
+
 const HomeItem = ({ item }) => {
+  const dispatch = useDispatch();
+  const bagItems = useSelector((store) => store.bag);
+
+  const elementFound = bagItems.indexOf(item.id) >= 0;
+
+  const handleAddToBag = () => {
+    dispatch(bagActions.addToBag(item.id));
+  };
+
+  const handleRemoveFromBag = () => {
+    dispatch(bagActions.removeFromBag(item.id));
+  };
+
   return (
     <>
       <div className="item-container">
@@ -13,12 +31,24 @@ const HomeItem = ({ item }) => {
           <span className="original-price">Rs {item.original_price}</span>
           <span className="discount">({item.discount_percentage}% OFF)</span>
         </div>
-        <button
-          className="btn-add-bag"
-          onclick={() => console.log("item was clicked")}
-        >
-          Add to Bag
-        </button>
+
+        {elementFound ? (
+          <button
+            type="button"
+            onClick={handleRemoveFromBag}
+            className="btn btn-danger btn-add-bag"
+          >
+            Remove <IoBagRemoveOutline />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleAddToBag}
+            className="btn btn-success  btn-add-bag"
+          >
+            Add to Bag <IoBagAddOutline />
+          </button>
+        )}
       </div>
     </>
   );
